@@ -32,9 +32,21 @@ jobs:
           cd Lab1
           mvn spotbugs:check
 
-      - name: Upload SpotBugs XML report
+      - name: Run OWASP Dependency Check
+        run: |
+          cd Lab1
+          mvn org.owasp:dependency-check-maven:check -Dformat=HTML -Dformat=XML
+
+      - name: Upload XML reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: spotbugs-xml-report
-          path: Lab1/target/spotbugsXml.xml
+          name: reports
+          path: Lab1/target/*.xml
+
+      - name: Upload Dependency Check HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-html-report
+          path: Lab1/target/dependency-check-report.html

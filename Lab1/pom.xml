@@ -118,6 +118,11 @@
                     </plugins>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>12.1.3</version>
+            </plugin>
         </plugins>
     </build>
 
