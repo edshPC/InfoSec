@@ -33,6 +33,7 @@ jobs:
           mvn spotbugs:check
 
       - name: OWASP Dependency Check
+        if: always()
         uses: dependency-check/Dependency-Check_Action@main
         id: dependency-check
         env:
@@ -49,6 +50,7 @@ jobs:
             --nvdApiKey ""
 
       - name: Upload Dependency Check reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: dependency-check-reports
