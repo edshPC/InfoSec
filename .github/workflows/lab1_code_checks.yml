@@ -1,0 +1,47 @@
+name: Lab1 SpotBugs
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
+jobs:
+  spotbugs-analysis:
+    name: SpotBugs Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run SpotBugs with HTML report
+        run: |
+          cd Lab1
+          mvn compile spotbugs:spotbugs
+
+      - name: Check for bugs (fails if bugs found)
+        run: |
+          cd Lab1
+          mvn spotbugs:check
+
+      - name: Upload SpotBugs HTML report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: spotbugs-html-report
+          path: Lab1/target/spotbugs.html
+
+      - name: Upload SpotBugs XML report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: spotbugs-xml-report
+          path: Lab1/target/spotbugs.xml
