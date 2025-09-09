@@ -32,16 +32,9 @@ jobs:
           cd Lab1
           mvn spotbugs:check
 
-      - name: Upload SpotBugs HTML report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: spotbugs-html-report
-          path: Lab1/target/spotbugs.html
-
       - name: Upload SpotBugs XML report
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: spotbugs-xml-report
-          path: Lab1/target/spotbugs.xml
+          path: Lab1/target/spotbugsXml.xml
