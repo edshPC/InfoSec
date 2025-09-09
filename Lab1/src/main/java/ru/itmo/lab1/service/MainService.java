@@ -14,11 +14,12 @@ import ru.itmo.lab1.entity.User;
 import ru.itmo.lab1.repo.UserRepo;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.regex.Pattern;
 
 @Service
-public class MainService {
+public final class MainService {
     private static final long expiration = 1000 * 60 * 60 * 6; // 6 час
     private static final Pattern PASSWORD_PATTERN =
             Pattern.compile("^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?]).{8,}$");
@@ -27,15 +28,14 @@ public class MainService {
 
     public MainService(@Value("${jwt.secret}") String secret,
                        UserRepo userRepo) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.userRepo = userRepo;
     }
 
-    public User authenticate(String token) {
+    public String authenticate(String token) {
         var parser = Jwts.parser().verifyWith(secretKey).build();
         var decoded = parser.parseSignedClaims(token).getPayload();
-        var user = userRepo.findById(decoded.getSubject());
-        return user.orElseThrow();
+        return decoded.getSubject();
     }
 
     public AuthResponse register(AuthRequest request) {
@@ -84,12 +84,14 @@ public class MainService {
                 .compact();
     }
 
-    public void saveData(User user, String data) {
+    public void saveData(String username, String data) {
+        User user = userRepo.findById(username).orElseThrow();
         user.setData(data);
         userRepo.save(user);
     }
 
-    public DataResponse getData(User user) {
+    public DataResponse getData(String username) {
+        User user = userRepo.findById(username).orElseThrow();
         return new DataResponse(user.getData());
     }
 

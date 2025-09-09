@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.itmo.lab1.entity.User;
+import org.springframework.web.util.HtmlUtils;
 import ru.itmo.lab1.service.MainService;
 
 import javax.naming.AuthenticationException;
@@ -28,14 +28,14 @@ public class AuthFilter extends OncePerRequestFilter {
             }
 
             String token = authHeader.substring(7);
-            User user = mainService.authenticate(token);
+            String username = mainService.authenticate(token);
 
-            request.setAttribute("user", user);
+            request.setAttribute("username", username);
             filterChain.doFilter(request, response);
 
         } catch (Exception e) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Authentication failed: " + e.getMessage());
+            response.getWriter().write(HtmlUtils.htmlEscape("Authentication failed: " + e.getMessage()));
         }
     }
 }

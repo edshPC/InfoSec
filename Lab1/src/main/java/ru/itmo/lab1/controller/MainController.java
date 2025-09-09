@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.itmo.lab1.api.AuthRequest;
-import ru.itmo.lab1.entity.User;
 import ru.itmo.lab1.service.MainService;
 
 @RestController
@@ -29,14 +28,14 @@ public class MainController {
 
     @PutMapping("/api/data")
     public ResponseEntity<?> putData(@RequestBody String data,
-                                     @RequestAttribute("user") User user) {
-        mainService.saveData(user, data);
+                                     @RequestAttribute("username") String username) {
+        mainService.saveData(username, data);
         return ResponseEntity.ok("Saved");
     }
 
     @GetMapping("/api/data")
-    public ResponseEntity<?> getData(@RequestAttribute("user") User user) {
-        var data = mainService.getData(user);
+    public ResponseEntity<?> getData(@RequestAttribute("username") String username) {
+        var data = mainService.getData(username);
         return ResponseEntity.ok(data);
     }
 
