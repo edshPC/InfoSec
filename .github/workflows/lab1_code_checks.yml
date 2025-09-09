@@ -1,4 +1,4 @@
-name: Lab1 SpotBugs
+name: Lab1 Code Analysis
 
 on:
   push:
@@ -7,8 +7,8 @@ on:
     branches: [ '**' ]
 
 jobs:
-  spotbugs-analysis:
-    name: SpotBugs Analysis
+  code-analysis:
+    name: Code Analysis
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - name: Run SpotBugs with HTML report
+      - name: Run SpotBugs
         run: |
           cd Lab1
           mvn compile spotbugs:spotbugs
@@ -33,6 +33,7 @@ jobs:
           mvn spotbugs:check
 
       - name: Run OWASP Dependency Check
+        if: always()
         run: |
           cd Lab1
           mvn org.owasp:dependency-check-maven:check -Dformat=HTML -Dformat=XML
