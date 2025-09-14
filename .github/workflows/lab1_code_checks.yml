@@ -25,12 +25,12 @@ jobs:
       - name: Build project
         run: |
           cd Lab1
-          mvn clean install
+          mvn -ntp clean install
 
       - name: Run SpotBugs
         run: |
           cd Lab1
-          mvn spotbugs:spotbugs
+          mvn -ntp spotbugs:spotbugs
 
       - name: Check for bugs (fails if bugs found)
         run: |
