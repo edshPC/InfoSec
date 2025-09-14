@@ -22,10 +22,15 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
+      - name: Build project
+        run: |
+          cd Lab1
+          mvn clean install
+
       - name: Run SpotBugs
         run: |
           cd Lab1
-          mvn compile spotbugs:spotbugs
+          mvn spotbugs:spotbugs
 
       - name: Check for bugs (fails if bugs found)
         run: |
@@ -44,7 +49,7 @@ jobs:
           format: 'HTML'
           out: 'reports'
           args: >
-            --failOnCVSS 7
+            --failOnCVSS 1
             --enableRetired
 
       - name: Upload Dependency Check reports
